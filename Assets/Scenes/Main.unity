@@ -431,8 +431,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4eff9d016f514bcd8ed4b0d9cc6a548, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  turnArea: 0.1
+  speed: 2
+  turnArea: 0.03
   stopped: 0
 --- !u!114 &35622585
 MonoBehaviour:
@@ -814,7 +814,7 @@ MonoBehaviour:
     type: 3}
   squarePrefab: {fileID: 4523179530288260814, guid: ba8d7f0557c024d23bcc47d81bd01909,
     type: 3}
-  blockSize: 5
+  blockSize: 10
   tilesParent: {fileID: 567783162}
 --- !u!4 &567783162
 Transform:

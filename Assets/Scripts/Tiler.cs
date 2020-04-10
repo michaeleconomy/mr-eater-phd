@@ -17,7 +17,13 @@ public class Tiler : MonoBehaviour {
     private readonly Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
 
     private readonly Dictionary<Vector2Int, int> blocks = new Dictionary<Vector2Int, int>();
-    private int block = 100;
+    private int currentBlock = 100;
+    private List<Vector2Int> directions = new List<Vector2Int>{
+        Vector2Int.left,
+        Vector2Int.right,
+        Vector2Int.up,
+        Vector2Int.down,
+    };
     private readonly List<bool[,]> shapes = new List<bool[,]>(),
         baseShapes = new List<bool[,]> {
         new bool[,] {
@@ -92,15 +98,6 @@ public class Tiler : MonoBehaviour {
 
     public void DoNearby(Vector2Int currentPos) {
         EachNearby(currentPos, FitShape);
-        var pos = currentPos - Vector2Int.one * blockSize;
-        var s = "";
-        for(pos.y = currentPos.y - blockSize; pos.y < currentPos.y + blockSize; pos.y++) {
-            for(pos.x = currentPos.x - blockSize; pos.x < currentPos.x + blockSize; pos.x++) {
-                s += blocks.GetWithDefault(pos, 999) + " ";
-            }
-            s += "\n";
-        }
-        Debug.Log(s);
         EachNearby(currentPos, SetTile);
 
         Debug.Log("TODO add tacos");
@@ -109,11 +106,77 @@ public class Tiler : MonoBehaviour {
         Debug.Log("TODO add enemies");
     }
 
+    private  int? BlockToMerge(int block, Vector2Int startPos) {
+        var squaresToCheck = new List<Vector2Int>{
+            startPos
+        }; 
+        var checkedSquares = new HashSet<Vector2Int>();
+        var borders = new Dictionary<int, int>();
+        while (!squaresToCheck.Empty()) {
+            var pos = squaresToCheck.Pop();
+            foreach (var direction in directions) {
+                var otherPos = pos + direction;
+                if (!blocks.TryGetValue(otherPos, out var otherBlock)) {
+                    continue;
+                }
+                if (otherBlock != block) {
+                    borders.Increment(otherBlock);
+                    continue;
+                }
+                if (!checkedSquares.Contains(otherPos)) {
+                    squaresToCheck.Add(otherPos);
+                }
+            }
+            checkedSquares.Add(pos);
+        }
+
+        foreach (var pair in borders) {
+            var borderCount = pair.Value;
+            if (borderCount == 1) {
+                return pair.Key;
+            }
+        }
+        return null;
+    }
+
+    private void MergeBlocks(int block, Vector2Int startPos) {
+        for (var mergeBlock = BlockToMerge(block, startPos);
+                mergeBlock != null;
+                mergeBlock = BlockToMerge(block, startPos)) {
+            var squaresToCheck = new List<Vector2Int>{
+                startPos
+            }; 
+            var checkedSquares = new HashSet<Vector2Int>();
+            while (!squaresToCheck.Empty()) {
+                var pos = squaresToCheck.Pop();
+                foreach (var direction in directions) {
+                    var otherPos = pos + direction;
+                    if (!blocks.TryGetValue(otherPos, out var otherBlock)) {
+                        continue;
+                    }
+                    if (otherBlock == mergeBlock.Value) {
+                        blocks[otherPos] = block;
+                        squaresToCheck.Add(otherPos);
+                        continue;
+                    }
+                    if (otherBlock != block) {
+                        continue;
+                    }
+                    if (!checkedSquares.Contains(otherPos)) {
+                        squaresToCheck.Add(otherPos);
+                    }
+                }
+                checkedSquares.Add(pos);
+            }
+        }
+    }
+
+
     private void FitShape(Vector2Int pos) {
         if (blocks.ContainsKey(pos)) {
             return;
         }
-        block++;
+        currentBlock++;
         foreach (var shape in shapes.Shuffle()) {
             var rotated = shape;
             for (var i = 0; i < 4; i++) {
@@ -124,7 +187,8 @@ public class Tiler : MonoBehaviour {
             }
         }
         Debug.Log("No shape fit, inserting single.");
-        blocks[pos] = block;
+        blocks[pos] = currentBlock;
+        MergeBlocks(currentBlock, pos);
 
         var square = Instantiate(squarePrefab, new Vector3(pos.x + .5f, pos.y + .5f), Quaternion.identity);
         square.color = UnityEngine.Random.ColorHSV();
@@ -159,12 +223,13 @@ public class Tiler : MonoBehaviour {
             for (var y = 0; y < shape.GetLength(1); y++) {
                 var space = new Vector2Int(x + pos.x - offset.x, y + pos.y - offset.y);
                 if (shape[x, y]) {
-                    blocks[space] = block;
+                    blocks[space] = currentBlock;
                     var square = Instantiate(squarePrefab, new Vector3(space.x + .5f, space.y + .5f), Quaternion.identity);
                     square.color = color;
                 }
             }
         }
+        MergeBlocks(currentBlock, pos);
         return true;
     }
 
@@ -209,7 +274,7 @@ public class Tiler : MonoBehaviour {
         }
         tiles.Clear();
         blocks.Clear();
-        block = 100;
+        currentBlock = 100;
     }
 
 }
