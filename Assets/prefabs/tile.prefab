@@ -109,3 +109,4 @@ MonoBehaviour:
   straightH: {fileID: 21300000, guid: 98ec7915353584082814c590c7a8fc84, type: 3}
   straightV: {fileID: 21300000, guid: bff8495e6bef0418083e4cc3b1c0e679, type: 3}
   cross: {fileID: 21300000, guid: ed633492922614642916e61be1e4920f, type: 3}
+  full: {fileID: 21300000, guid: ea44f83b0c9fa41d79e73e25bd17f030, type: 3}

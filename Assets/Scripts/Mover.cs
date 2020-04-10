@@ -70,6 +70,9 @@ public class Mover : MonoBehaviour {
         if (direction == Vector2Int.down) {
             return transform.position.y > tile.transform.position.y || !tile.wallDown;
         }
+        if (direction == Vector2Int.zero) {
+            return true;
+        }
         throw new Exception("direction not supported: " + direction);
     }
 

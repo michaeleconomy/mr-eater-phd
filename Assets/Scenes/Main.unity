@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  turnArea: 0.3
+  turnArea: 0.1
   stopped: 0
 --- !u!114 &35622585
 MonoBehaviour:
@@ -812,7 +812,9 @@ MonoBehaviour:
     type: 3}
   enemyPrefab: {fileID: 865984168566897787, guid: 86f13adb40b9a4c4899b1ddd76b7e46c,
     type: 3}
-  blockSize: 20
+  squarePrefab: {fileID: 4523179530288260814, guid: ba8d7f0557c024d23bcc47d81bd01909,
+    type: 3}
+  blockSize: 5
   tilesParent: {fileID: 567783162}
 --- !u!4 &567783162
 Transform:

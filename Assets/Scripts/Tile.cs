@@ -11,7 +11,7 @@ public class Tile : MonoBehaviour {
     public Sprite cornerTR, cornerTL, cornerBL, cornerBR,
         tL, tR, tT, tB,
         straightH, straightV,
-        cross;
+        cross, full;
 
     private SpriteRenderer sr;
 
@@ -27,6 +27,10 @@ public class Tile : MonoBehaviour {
     public void Refresh() {
         if (!wallUp && !wallDown && !wallLeft && !wallRight) {
             SR.sprite = cross;
+            return;
+        }
+        if (wallUp && wallDown && wallLeft && wallRight) {
+            SR.sprite = full;
             return;
         }
         //T
