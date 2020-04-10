@@ -10,9 +10,10 @@ public class Tiler : MonoBehaviour {
 
     public Tile tilePrefab;
     public Enemy enemyPrefab;
-    public SpriteRenderer squarePrefab;
     public int blockSize;
     public Transform tilesParent;
+    public SpriteRenderer squarePrefab;
+    public bool drawSquares;
 
     private readonly Dictionary<Vector2Int, Tile> tiles = new Dictionary<Vector2Int, Tile>();
 
@@ -189,9 +190,10 @@ public class Tiler : MonoBehaviour {
         Debug.Log("No shape fit, inserting single.");
         blocks[pos] = currentBlock;
         MergeBlocks(currentBlock, pos);
-
-        var square = Instantiate(squarePrefab, new Vector3(pos.x + .5f, pos.y + .5f), Quaternion.identity);
-        square.color = UnityEngine.Random.ColorHSV();
+        if (drawSquares) {
+            var square = Instantiate(squarePrefab, new Vector3(pos.x + .5f, pos.y + .5f), Quaternion.identity);
+            square.color = UnityEngine.Random.ColorHSV();
+        }
     }
 
     private bool ShapeFits(bool[,] shape, Vector2Int pos) {
@@ -224,8 +226,10 @@ public class Tiler : MonoBehaviour {
                 var space = new Vector2Int(x + pos.x - offset.x, y + pos.y - offset.y);
                 if (shape[x, y]) {
                     blocks[space] = currentBlock;
-                    var square = Instantiate(squarePrefab, new Vector3(space.x + .5f, space.y + .5f), Quaternion.identity);
-                    square.color = color;
+                    if (drawSquares) {
+                        var square = Instantiate(squarePrefab, new Vector3(space.x + .5f, space.y + .5f), Quaternion.identity);
+                        square.color = color;
+                    }
                 }
             }
         }
