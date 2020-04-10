@@ -91,20 +91,17 @@ public class Tiler : MonoBehaviour {
     }
 
     public Tile GetTile(Vector2Int position) {
-        if (!tiles.TryGetValue(position, out var tile)) {
-            throw new Exception("no tile at position: " + position);
-        }
-        return tile;
+        return tiles.GetWithDefault(position);
     }
 
     public void DoNearby(Vector2Int currentPos) {
         EachNearby(currentPos, FitShape);
         EachNearby(currentPos, SetTile);
 
-        Debug.Log("TODO add tacos");
-        Debug.Log("TODO add burgers");
-        Debug.Log("TODO add other foods");
-        Debug.Log("TODO add enemies");
+        // Debug.Log("TODO add tacos");
+        // Debug.Log("TODO add burgers");
+        // Debug.Log("TODO add other foods");
+        // Debug.Log("TODO add enemies");
     }
 
     private  int? BlockToMerge(int block, Vector2Int startPos) {
@@ -187,7 +184,7 @@ public class Tiler : MonoBehaviour {
                 rotated = rotated.Rotate();
             }
         }
-        Debug.Log("No shape fit, inserting single.");
+        // Debug.Log("No shape fit, inserting single.");
         blocks[pos] = currentBlock;
         MergeBlocks(currentBlock, pos);
         if (drawSquares) {

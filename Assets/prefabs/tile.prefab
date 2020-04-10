@@ -94,6 +94,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79db3eec36c414a1fa46b6cc0b9ce82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  specialPickupPrefabs:
+  - {fileID: 4956096992531878120, guid: 6ff875a515a814c2b83808f733080210, type: 3}
+  - {fileID: 3027429721962305950, guid: 3c6ac0ad0febc43ec9bccf24832ef8c5, type: 3}
+  - {fileID: 489932980282399125, guid: b8b956f21cac649f4ac54fa354ca6a02, type: 3}
+  - {fileID: 5669752744464087098, guid: 1fee08cbd42b4459eac4b9851a71e2b9, type: 3}
+  defaultPickupPrefab: {fileID: 7892169110094660929, guid: e3ef10d38584e45d19c8c55a29655163,
+    type: 3}
+  enemyPrefabs:
+  - {fileID: 3243996938828483518, guid: 86f13adb40b9a4c4899b1ddd76b7e46c, type: 3}
+  enemyChance: 0.1
+  specialChance: 0.1
   wallUp: 0
   wallDown: 0
   wallLeft: 0

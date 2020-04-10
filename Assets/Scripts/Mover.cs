@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Controller))]
 public class Mover : MonoBehaviour {
     public float speed, turnArea;
-    public bool stopped;
+    public bool stopped = true;
     private Controller controller;
     private Player player;
     private Vector2Int lastPlayerPosition;
@@ -28,6 +28,10 @@ public class Mover : MonoBehaviour {
             return;
         }
         var tile = Tiler.instance.GetTile(Position);
+        if (tile == null) {
+            stopped = true;
+            return;
+        }
         if (CanMove(controller.NextDirection, tile)) {
             controller.MoveNextDirection();
             var position = transform.position;
@@ -40,6 +44,10 @@ public class Mover : MonoBehaviour {
             transform.position = position;
         }
         else if (!CanMove(controller.Direction, tile)) {
+            stopped = true;
+            return;
+        }
+        if (controller.Direction == Vector2Int.zero) {
             stopped = true;
             return;
         }

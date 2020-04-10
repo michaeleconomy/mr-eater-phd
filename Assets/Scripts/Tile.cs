@@ -6,6 +6,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Tile : MonoBehaviour {
+    public GameObject[] specialPickupPrefabs;
+    public Pickup defaultPickupPrefab;
+    public GameObject[] enemyPrefabs;
+
+    public float enemyChance, specialChance;
+
     public bool wallUp, wallDown, wallLeft, wallRight;
 
     public Sprite cornerTR, cornerTL, cornerBL, cornerBR,
@@ -22,6 +28,40 @@ public class Tile : MonoBehaviour {
             }
             return sr;
         }
+    }
+
+    private void Start() {
+        if (wallUp && wallDown && wallLeft && wallRight) {
+            return;
+        }
+        var specialPrefab = SpecialType();
+        if (specialPrefab != null) {
+            Instantiate(specialPrefab, transform.position, Quaternion.identity);
+        }
+
+        if (specialPrefab == null || specialPrefab.GetComponent<Mover>() != null) {
+            Instantiate(defaultPickupPrefab, transform.position, Quaternion.identity);
+        }
+        if (!wallRight) {
+            var rightSide = transform.position;
+            rightSide.x += .5f;
+            Instantiate(defaultPickupPrefab, rightSide, Quaternion.identity);
+        }
+        if (!wallDown) {
+            var rightSide = transform.position;
+            rightSide.y -= .5f;
+            Instantiate(defaultPickupPrefab, rightSide, Quaternion.identity);
+        }
+    }
+
+    private GameObject SpecialType() {
+        if (Rand.P(enemyChance)) {
+            return enemyPrefabs.RandomElement();
+        }
+        else if (Rand.P(specialChance)) {
+            return specialPickupPrefabs.RandomElement();
+        }
+        return null;
     }
 
     public void Refresh() {
